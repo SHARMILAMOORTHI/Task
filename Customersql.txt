@@ -1,0 +1,181 @@
+create table Customer(CustomerID int AUTO_INCREMENT primary key,CustomerName varchar(20),CustomerCity varchar(20),CustomerAddress varchar(50),CustomerMobileNo bigint unique,PAN varchar(20) unique,CustomerPassword varchar(20)) AUTO_INCREMENT=100;
+
+
+
+mysql> select *from customer;
++------------+--------------+--------------+-----------------+------------------+-----------+------------------+
+| CustomerID | CustomerName | CustomerCity | CustomerAddress | CustomerMobileNo | PAN       | CustomerPassword |
++------------+--------------+--------------+-----------------+------------------+-----------+------------------+
+|        100 | Sharmi       | Dpi          | Palacode        |        999999999 | SK990KK   | sharmi           |
+|        101 | Joe          | dpi          | Palacode        |         99999988 | JKKIR099  | JOE              |
+|        102 | Jothi        | Salem        | JFF             |        849484262 | KJGSF9900 | JOTHI            |
+|        103 | Aruna        | KRG          | JFKFL           |        914976862 | HDGF999   | ARUNA            |
+|        104 | Deva         | Salem        | KKSJ            |        942387561 | AJSKJA905 | DEVA             |
+|        105 | Mithran      | Chennai      | JGKLF           |        673482454 | JHJ9999   | MITHRAN          |
+|        106 | Diya         | KNKM         | JASUS           |        687623847 | HJH435    | DIYA             |
+|        107 | Arun         | Kovai        | JSDUJDS         |       7875981124 | LKADJW45  | ARUN             |
++------------+--------------+--------------+-----------------+------------------+-----------+------------------+
+8 rows in set (0.00 sec)
+
+mysql> insert into customer values(108,"Harthi","Dpi","SDJJF",877465813,"JKHJF876","HARTHI");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> insert into customer values(109,"Preethi","Thanjai","KJSL",925324654,"KDHKJS896","PREETHI");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> select *from customer;
++------------+--------------+--------------+-----------------+------------------+-----------+------------------+
+| CustomerID | CustomerName | CustomerCity | CustomerAddress | CustomerMobileNo | PAN       | CustomerPassword |
++------------+--------------+--------------+-----------------+------------------+-----------+------------------+
+|        100 | Sharmi       | Dpi          | Palacode        |        999999999 | SK990KK   | sharmi           |
+|        101 | Joe          | dpi          | Palacode        |         99999988 | JKKIR099  | JOE              |
+|        102 | Jothi        | Salem        | JFF             |        849484262 | KJGSF9900 | JOTHI            |
+|        103 | Aruna        | KRG          | JFKFL           |        914976862 | HDGF999   | ARUNA            |
+|        104 | Deva         | Salem        | KKSJ            |        942387561 | AJSKJA905 | DEVA             |
+|        105 | Mithran      | Chennai      | JGKLF           |        673482454 | JHJ9999   | MITHRAN          |
+|        106 | Diya         | KNKM         | JASUS           |        687623847 | HJH435    | DIYA             |
+|        107 | Arun         | Kovai        | JSDUJDS         |       7875981124 | LKADJW45  | ARUN             |
+|        108 | Harthi       | Dpi          | SDJJF           |        877465813 | JKHJF876  | HARTHI           |
+|        109 | Preethi      | Thanjai      | KJSL            |        925324654 | KDHKJS896 | PREETHI          |
++------------+--------------+--------------+-----------------+------------------+-----------+------------------+
+10 rows in set (0.00 sec)
+
+mysql> create table AccountInfo(AccountID bigint AUTO_INCREMENT primary key,CustomerID int,foreign key(CustomerID) references  CustomerInfo(CustomerID),AccountType varchar(20),AccountBalance bigint,AccountOpenDate date,AccountStatus Varchar(10) not null CHECK(AccountStatus in ('Open','Closed','Blocked')));
+ERROR 1824 (HY000): Failed to open the referenced table 'customerinfo'
+mysql> create table AccountInfo(AccountID bigint AUTO_INCREMENT primary key,CustomerID int,foreign key(CustomerID) references  Customer(CustomerID),AccountType varchar(20),AccountBalance bigint,AccountOpenDate date,AccountStatus Varchar(10) not null CHECK(AccountStatus in ('Open','Closed','Blocked')));
+Query OK, 0 rows affected (2.35 sec)
+
+mysql> insert into AccountInfo values(19473252,100,"Salary Account",20000,'2021-01-09',"Open");
+Query OK, 1 row affected (0.28 sec)
+
+mysql> insert into AccountInfo values(11121433,101,"Savings Account",15000,'2021-01-09',"Closed");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into AccountInfo values(13973131,102,"Current Account",25000,'2021-01-09',"open");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into AccountInfo values(123456783,103,"Salary Account",50000,'2020-05-10',"open");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into AccountInfo values(123456784,104,"Savings Account",40000,'2019-01-12',"open");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into AccountInfo values(123456785,105,"Salary Account",20000,'2020-05-12',"Closed");
+Query OK, 1 row affected (0.06 sec)
+
+mysql> select *from AccountInfo;
++-----------+------------+-----------------+----------------+-----------------+---------------+
+| AccountID | CustomerID | AccountType     | AccountBalance | AccountOpenDate | AccountStatus |
++-----------+------------+-----------------+----------------+-----------------+---------------+
+|  11121433 |        101 | Savings Account |          15000 | 2021-01-09      | Closed        |
+|  13973131 |        102 | Current Account |          25000 | 2021-01-09      | open          |
+|  19473252 |        100 | Salary Account  |          20000 | 2021-01-09      | Open          |
+| 123456783 |        103 | Salary Account  |          50000 | 2020-05-10      | open          |
+| 123456784 |        104 | Savings Account |          40000 | 2019-01-12      | open          |
+| 123456785 |        105 | Salary Account  |          20000 | 2020-05-12      | Closed        |
++-----------+------------+-----------------+----------------+-----------------+---------------+
+6 rows in set (0.00 sec)
+
+mysql> create table TransactionInfo(TransactionID int AUTO_INCREMENT primary key,AccountID bigint,foreign key(AccountID) references AccountInfo(AccountID),TransactionType varchar(20) default 'Not Done',Amount bigint check(Amount>0),TransactionDate date);
+Query OK, 0 rows affected (1.99 sec)
+
+mysql> insert into TransactionInfo values(0,123456780,"Debit",2000,'2021-05-09');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`sample`.`transactioninfo`, CONSTRAINT `transactioninfo_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `accountinfo` (`AccountID`))
+mysql> insert into TransactionInfo values(0,123456780,"Debit",2000,'2021-05-09');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`sample`.`transactioninfo`, CONSTRAINT `transactioninfo_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `accountinfo` (`AccountID`))
+mysql> insert into TransactionInfo values(2,123456782,"Credit",1000,'2021-05-09');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`sample`.`transactioninfo`, CONSTRAINT `transactioninfo_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `accountinfo` (`AccountID`))
+mysql> desc TransactionInfo;
++-----------------+-------------+------+-----+----------+----------------+
+| Field           | Type        | Null | Key | Default  | Extra          |
++-----------------+-------------+------+-----+----------+----------------+
+| TransactionID   | int         | NO   | PRI | NULL     | auto_increment |
+| AccountID       | bigint      | YES  | MUL | NULL     |                |
+| TransactionType | varchar(20) | YES  |     | Not Done |                |
+| Amount          | bigint      | YES  |     | NULL     |                |
+| TransactionDate | date        | YES  |     | NULL     |                |
++-----------------+-------------+------+-----+----------+----------------+
+5 rows in set (0.45 sec)
+
+mysql> insert into TransactionInfo values(4,123456784,"Debit",800,'2021-01-09');
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into TransactionInfo values(0,19473252,"Debit",2000,'2021-05-09');
+Query OK, 1 row affected (0.15 sec)
+
+mysql> insert into TransactionInfo values(2,11121433,"Credit",1000,'2021-05-09');
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into TransactionInfo values(3,13973131,"Credit",1550,'2021-05-22');
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into TransactionInfo values(5,123456785,"Debit",1010,'2021-01-20');
+ERROR 1062 (23000): Duplicate entry '5' for key 'transactioninfo.PRIMARY'
+mysql> insert into TransactionInfo values(6,123456786,"Credit",1015,'2021-08-20');
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`sample`.`transactioninfo`, CONSTRAINT `transactioninfo_ibfk_1` FOREIGN KEY (`AccountID`) REFERENCES `accountinfo` (`AccountID`))
+mysql> select *from TransactionInfo;
++---------------+-----------+-----------------+--------+-----------------+
+| TransactionID | AccountID | TransactionType | Amount | TransactionDate |
++---------------+-----------+-----------------+--------+-----------------+
+|             2 |  11121433 | Credit          |   1000 | 2021-05-09      |
+|             3 |  13973131 | Credit          |   1550 | 2021-05-22      |
+|             4 | 123456784 | Debit           |    800 | 2021-01-09      |
+|             5 |  19473252 | Debit           |   2000 | 2021-05-09      |
++---------------+-----------+-----------------+--------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql>
+mysql> select * from TransactionInfo where AccountID=11121433 order by TransactionDate desc limit 5;
++---------------+-----------+-----------------+--------+-----------------+
+| TransactionID | AccountID | TransactionType | Amount | TransactionDate |
++---------------+-----------+-----------------+--------+-----------------+
+|             2 |  11121433 | Credit          |   1000 | 2021-05-09      |
++---------------+-----------+-----------------+--------+-----------------+
+1 row in set (0.13 sec)
+
+mysql>
+mysql> select * from TransactionInfo where AccountID= and TransactionDate between '2021-05-09' and '2021-05-09';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'and TransactionDate between '2021-05-09' and '2021-05-09'' at line 1
+mysql> select * from TransactionInfo where AccountID=11121433 and TransactionDate between '2021-05-09' and '2021-05-09';
++---------------+-----------+-----------------+--------+-----------------+
+| TransactionID | AccountID | TransactionType | Amount | TransactionDate |
++---------------+-----------+-----------------+--------+-----------------+
+|             2 |  11121433 | Credit          |   1000 | 2021-05-09      |
++---------------+-----------+-----------------+--------+-----------------+
+1 row in set (0.03 sec)
+
+mysql>  select * from AccountInfo where CustomerID=100;
++-----------+------------+----------------+----------------+-----------------+---------------+
+| AccountID | CustomerID | AccountType    | AccountBalance | AccountOpenDate | AccountStatus |
++-----------+------------+----------------+----------------+-----------------+---------------+
+|  19473252 |        100 | Salary Account |          20000 | 2021-01-09      | Open          |
++-----------+------------+----------------+----------------+-----------------+---------------+
+1 row in set (0.21 sec)
+
+mysql> select a.CustomerID,a.CustomerName,a.CustomerAddress,a.CustomerMobileNo,b.AccountID,b.AccountBalance from CustomerInfo a,Accountinfo b where a.CustomerID=b.CustomerID;
+ERROR 1146 (42S02): Table 'sample.customerinfo' doesn't exist
+mysql> select a.CustomerID,a.CustomerName,a.CustomerAddress,a.CustomerMobileNo,b.AccountID,b.AccountBalance from Customer a,Accountinfo b where a.CustomerID=b.CustomerID;
++------------+--------------+-----------------+------------------+-----------+----------------+
+| CustomerID | CustomerName | CustomerAddress | CustomerMobileNo | AccountID | AccountBalance |
++------------+--------------+-----------------+------------------+-----------+----------------+
+|        100 | Sharmi       | Palacode        |        999999999 |  19473252 |          20000 |
+|        101 | Joe          | Palacode        |         99999988 |  11121433 |          15000 |
+|        102 | Jothi        | JFF             |        849484262 |  13973131 |          25000 |
+|        103 | Aruna        | JFKFL           |        914976862 | 123456783 |          50000 |
+|        104 | Deva         | KKSJ            |        942387561 | 123456784 |          40000 |
+|        105 | Mithran      | JGKLF           |        673482454 | 123456785 |          20000 |
++------------+--------------+-----------------+------------------+-----------+----------------+
+6 rows in set (0.03 sec)
+
+mysql> select a.AccountID,a.AccountBalance,b.TransactionID,b.Amount,b.TransactionType from AccountInfo a,TransactionInfo b where a.AccountID=b.AccountID;
++-----------+----------------+---------------+--------+-----------------+
+| AccountID | AccountBalance | TransactionID | Amount | TransactionType |
++-----------+----------------+---------------+--------+-----------------+
+|  11121433 |          15000 |             2 |   1000 | Credit          |
+|  13973131 |          25000 |             3 |   1550 | Credit          |
+| 123456784 |          40000 |             4 |    800 | Debit           |
+|  19473252 |          20000 |             5 |   2000 | Debit           |
++-----------+----------------+---------------+--------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql>
